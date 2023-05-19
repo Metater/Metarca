@@ -6,12 +6,4 @@
 	<LangVersion>11</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MessagePack" Version="2.5.108" />
-    <PackageReference Include="MessagePackAnalyzer" Version="2.5.108">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
 </Project>

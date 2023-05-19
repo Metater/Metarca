@@ -1,30 +1,27 @@
-﻿using Metarca.Shared;
-using System.Net;
-using System.Threading.Channels;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Metarca.Server;
 
-public record class Server(ChannelReader<(Packet packet, EndPoint remoteEndPoint)> ReceiverChannel, ChannelWriter<(Packet packet, EndPoint remoteEndPoint)> SenderChannel)
+public class Server
 {
-    public async Task RunAsync(CancellationToken cancellationToken = default)
+    private readonly ServerManager serverManager = new();
+
+    public Server()
     {
-		try
-		{
-            await foreach ((Packet packet, EndPoint remoteEndPoint) in ReceiverChannel.ReadAllAsync(cancellationToken))
-            {
-                await OnReceivedPacketAsync(packet, remoteEndPoint, cancellationToken);
-            }
-        }
-		catch (OperationCanceledException) { }
+        
     }
 
-    private async Task OnReceivedPacketAsync(Packet receivedPacket, EndPoint remoteEndPoint, CancellationToken cancellationToken = default)
+    public void PollEvents()
     {
-        switch (receivedPacket)
-        {
-            case TestPacket packet:
-                await SenderChannel.WriteAsync((packet, remoteEndPoint), cancellationToken);
-                break;
-        }
+        serverManager.netManager.PollEvents();
+    }
+
+    public void Tick(ulong tickId)
+    {
+
     }
 }

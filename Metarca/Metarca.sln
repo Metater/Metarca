@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metarca.Server", "Metarca.Server\Metarca.Server.csproj", "{9BF9B8F1-75BD-47FC-9B00-B02D9DF4DC56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metarca.Server", "Metarca.Server\Metarca.Server.csproj", "{9BF9B8F1-75BD-47FC-9B00-B02D9DF4DC56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metarca.Shared", "Metarca.Shared\Metarca.Shared.csproj", "{130258F6-7DA3-4F06-A673-E6D44EF26CB8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metarca.Client", "Metarca.Client\Metarca.Client.csproj", "{553A28E8-4CDC-47C0-8C76-A3BCF94B3D37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metarca.Shared", "Metarca.Shared\Metarca.Shared.csproj", "{130258F6-7DA3-4F06-A673-E6D44EF26CB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{130258F6-7DA3-4F06-A673-E6D44EF26CB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{130258F6-7DA3-4F06-A673-E6D44EF26CB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{130258F6-7DA3-4F06-A673-E6D44EF26CB8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{553A28E8-4CDC-47C0-8C76-A3BCF94B3D37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{553A28E8-4CDC-47C0-8C76-A3BCF94B3D37}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{553A28E8-4CDC-47C0-8C76-A3BCF94B3D37}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{553A28E8-4CDC-47C0-8C76-A3BCF94B3D37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

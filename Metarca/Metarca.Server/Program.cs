@@ -1,8 +1,5 @@
 ﻿using Metarca.Server;
-using Metarca.Shared;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Channels;
+using System.Diagnostics;
 
 CancellationTokenSource cts = new();
 Console.CancelKeyPress += (s, e) =>
@@ -14,43 +11,23 @@ Console.CancelKeyPress += (s, e) =>
 
 Console.WriteLine("Hello, World!");
 
-Socket socket = new(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp)
+Server server = new();
+
+const double TicksPerSecond = 200000;
+ulong tickId = 0;
+Stopwatch stopwatch = Stopwatch.StartNew();
+while (true)
 {
-    DualMode = true,
-    SendBufferSize = 8192,
-    ReceiveBufferSize = 8192,
-};
+	server.PollEvents();
 
-socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+	while ((ulong)(stopwatch.Elapsed.TotalSeconds * TicksPerSecond) > tickId)
+	{
+		server.Tick(tickId++);
+	}
 
-socket.Bind(new IPEndPoint(IPAddress.IPv6Any, 7777));
-
-var receiverChannel = Channel.CreateUnbounded<(Packet packet, EndPoint remoteEndPoint)>(new UnboundedChannelOptions
-{
-    SingleReader = true,
-    SingleWriter = true,
-    AllowSynchronousContinuations = true
-});
-
-var senderChannel = Channel.CreateUnbounded<(Packet packet, EndPoint remoteEndPoint)>(new UnboundedChannelOptions
-{
-    SingleReader = true,
-    SingleWriter = true,
-    AllowSynchronousContinuations = true
-});
-
-Receiver receiver = new(socket, receiverChannel.Writer);
-Sender sender = new(socket, senderChannel.Reader);
-Server server = new(receiverChannel.Reader, senderChannel.Writer);
-
-List<Task> tasks = new()
-{
-    receiver.RunAsync(cts.Token),
-    sender.RunAsync(cts.Token),
-    server.RunAsync(cts.Token)
-};
-
-await Task.WhenAll(tasks.ToArray());
+	Console.Title = $"Tick Id: {tickId}, TPS: {TicksPerSecond}";
+	Thread.Sleep(15);
+}
 
 /*
 Metarca, mine Stat points, the more effort that goes into a certain player, the more powerful  it should be, handicap low computational power bots
