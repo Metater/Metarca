@@ -1,49 +1,40 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
 public class ClientManager : MonoBehaviour, INetEventListener
 {
-    private NetManager netManager;
-    private NetPacketProcessor packetProcessor;
-    private NetDataWriter writer;
+    public static readonly NetPacketProcessor packetProcessor = new();
+    private static readonly NetDataWriter writer = new();
+    public static NetManager NetManager { get; private set; }
 
     private void Awake()
     {
-        netManager = new(this)
-        {
-            AutoRecycle = false,
-            PacketPoolSize = 1000
-        };
-        packetProcessor = new();
-        writer = new();
-
-        netManager.Start();
-        netManager.Connect("localhost", 7777, "Metarca");
+        NetManager = new(this);
+        NetManager.Start();
+        NetManager.Connect("localhost", 7777, "Metarca");
     }
 
     private void Update()
     {
-        netManager.PollEvents();
+        NetManager.PollEvents();
     }
 
     private void OnApplicationQuit()
     {
-        netManager.Stop();
+        NetManager.Stop();
     }
 
-    public void SendPacket<T>(T packet, DeliveryMethod deliveryMethod) where T : class, new()
+    public static bool SendPacket<T>(T packet, DeliveryMethod deliveryMethod) where T : class, new()
     {
-        var server = netManager.FirstPeer;
-        if (server == null)
-            return;
+        var server = NetManager.FirstPeer;
+        if (server == null) return false;
         writer.Reset();
         packetProcessor.Write(writer, packet);
         server.Send(writer, deliveryMethod);
+        return true;
     }
 
     public void OnConnectionRequest(ConnectionRequest request)

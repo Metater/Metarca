@@ -22,6 +22,12 @@ public class ServerManager : INetEventListener
         packetProcessor.Write(writer, packet);
         peer.Send(writer, deliveryMethod);
     }
+    public void SendPacketToAll<T>(T packet, DeliveryMethod deliveryMethod) where T : class, new()
+    {
+        writer.Reset();
+        packetProcessor.Write(writer, packet);
+        netManager.SendToAll(writer, deliveryMethod);
+    }
 
     public void OnConnectionRequest(ConnectionRequest request)
     {

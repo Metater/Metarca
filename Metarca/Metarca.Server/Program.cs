@@ -1,4 +1,5 @@
 ﻿using Metarca.Server;
+using Metarca.Shared;
 using System.Diagnostics;
 
 CancellationTokenSource cts = new();
@@ -13,21 +14,22 @@ Console.WriteLine("Hello, World!");
 
 Server server = new();
 
-const double TicksPerSecond = 200000;
 ulong tickId = 0;
 Stopwatch stopwatch = Stopwatch.StartNew();
-while (true)
+while (!cts.IsCancellationRequested)
 {
 	server.PollEvents();
 
-	while ((ulong)(stopwatch.Elapsed.TotalSeconds * TicksPerSecond) > tickId)
+	while ((stopwatch.Elapsed.TotalSeconds * Constants.TicksPerSecond) > tickId)
 	{
-		server.Tick(tickId++);
+		double time = stopwatch.Elapsed.TotalSeconds;
+        server.Tick(time, tickId++);
 	}
 
-	Console.Title = $"Tick Id: {tickId}, TPS: {TicksPerSecond}";
 	Thread.Sleep(15);
 }
+
+server.Stop();
 
 /*
 Metarca, mine Stat points, the more effort that goes into a certain player, the more powerful  it should be, handicap low computational power bots
