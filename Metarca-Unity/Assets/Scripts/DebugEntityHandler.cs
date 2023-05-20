@@ -1,3 +1,4 @@
+using Metarca.Shared;
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ public class DebugEntityHandler : MonoBehaviour
     public void AddSnapshot(Vector2 position)
     {
         SnapshotInterpolation.InsertIfNotExists(snapshots, new TransformSnapshot(
-            timeManager.RemoteTimeStamp,
+            timeManager.RemoteTimeStamp + (Constants.SecondsPerTick * (Constants.TicksPerSecondMultiplier - 1)),
             Time.unscaledTimeAsDouble,
             position,
             Quaternion.identity,

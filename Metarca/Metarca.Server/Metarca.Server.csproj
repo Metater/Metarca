@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Metarca.Shared\Metarca.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Physics\" />
-  </ItemGroup>
-
 </Project>
