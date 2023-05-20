@@ -32,6 +32,11 @@ while (!cts.IsCancellationRequested)
 server.Stop();
 
 /*
+aspect ratio of screen is sent on connect, view area is a constant,
+^^^
+server calculates width and hieght of the view area to figure out what client should see
+
+
 Metarca, mine Stat points, the more effort that goes into a certain player, the more powerful  it should be, handicap low computational power bots
 attack types:
 	10 sec vote on attack type, random if cant agree:
