@@ -16,16 +16,18 @@ public class DebugEntityManager : MonoBehaviour
 
     private void OnDebugEntityPacket(DebugEntityPacket packet)
     {
-        var debugEntity = packet.Entities[0];
-        var id = debugEntity.Id;
-        var position = new Vector2(debugEntity.X, debugEntity.Y);
-
-        if (!entities.TryGetValue(id, out var entity))
+        foreach (var debugEntity in packet.Entities)
         {
-            entity = Instantiate(entityPrefab, position, Quaternion.identity, entitiesTransform);
-            entities[id] = entity;
-        }
+            var id = debugEntity.Id;
+            var position = new Vector2(debugEntity.X, debugEntity.Y);
 
-        entity.AddSnapshot(position);
+            if (!entities.TryGetValue(id, out var entity))
+            {
+                entity = Instantiate(entityPrefab, position, Quaternion.identity, entitiesTransform);
+                entities[id] = entity;
+            }
+
+            entity.AddSnapshot(position);
+        }
     }
 }

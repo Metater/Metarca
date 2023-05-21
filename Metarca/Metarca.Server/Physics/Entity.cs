@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Metarca.Server.Physics;
 
-public class Entity : IEntityListener
+public class Entity : ISteppable, ITickable
 {
     private const float DefaultVelocityEpsilon = 1f / 256f;
 
@@ -97,7 +97,7 @@ public class Entity : IEntityListener
 
     public Entity(Zone zone, Vector2 position, Vector2 velocity, params IEntityListener[] listeners)
     {
-        List<IEntityListener> entityListeners = new(); // TODO { this }; !!!!!!!!!!!!!!!!!!!!!!!!!
+        List<IEntityListener> entityListeners = new();
         entityListeners.AddRange(listeners);
         events = new(entityListeners);
 
@@ -190,22 +190,26 @@ public class Entity : IEntityListener
                 {
                     boundsDirection |= StopDirection.North;
                     desiredPosition.Y = bounds.collider.North;
+                    Velocity = new(Velocity.X, 0);
                 }
                 else if (desiredPosition.Y < bounds.collider.South)
                 {
                     boundsDirection |= StopDirection.South;
                     desiredPosition.Y = bounds.collider.South;
+                    Velocity = new(Velocity.X, 0);
                 }
 
                 if (desiredPosition.X > bounds.collider.East)
                 {
                     boundsDirection |= StopDirection.East;
                     desiredPosition.X = bounds.collider.East;
+                    Velocity = new(0, Velocity.Y);
                 }
                 else if (desiredPosition.X < bounds.collider.West)
                 {
                     boundsDirection |= StopDirection.West;
                     desiredPosition.X = bounds.collider.West;
+                    Velocity = new(0, Velocity.Y);
                 }
 
                 if (boundsDirection != StopDirection.None)
@@ -241,17 +245,25 @@ public class Entity : IEntityListener
         float distanceY = repulsor.Position.Y - Position.Y;
         float squareDistance = distanceX * distanceX + distanceY * distanceY;
         float minDistance = repulsion.radius + repulsor.repulsion.radius;
+
         if (minDistance * minDistance > squareDistance)
         {
+            float minMaxRepulsionForce = Math.Min(repulsion.maxMagnitude, repulsor.repulsion.maxMagnitude);
+
             if (squareDistance != 0)
             {
                 float repulsionMagnitude = (repulsion.force + repulsor.repulsion.force) * (1 / squareDistance);
-                float minMaxRepulsionForce = Math.Min(repulsion.maxMagnitude, repulsor.repulsion.maxMagnitude);
                 repulsionMagnitude = Math.Clamp(repulsionMagnitude, -minMaxRepulsionForce, minMaxRepulsionForce);
                 float reciprocalDistance = MathF.ReciprocalSqrtEstimate(squareDistance);
                 return new Vector2(distanceX * reciprocalDistance, distanceY * reciprocalDistance) * -repulsionMagnitude;
             }
+            else
+            {
+                float randomDirection = Random.Shared.NextSingle() * 2f * MathF.PI;
+                return new Vector2(MathF.Cos(randomDirection), MathF.Sin(randomDirection)) * -minMaxRepulsionForce;
+            }
         }
+
         return Vector2.Zero;
     }
 

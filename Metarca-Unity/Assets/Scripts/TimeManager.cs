@@ -12,6 +12,7 @@ public class TimeManager : MonoBehaviour
     private double localTimescale = 1;
     private ExponentialMovingAverage driftEma;
     private ExponentialMovingAverage deliveryTimeEma;
+
     public double RemoteTimeStamp => remoteTimeStamp;
     public double LocalTimeline => localTimeline;
     private double BufferTime => Constants.SecondsPerTick * snapshotSettings.bufferTimeMultiplier;

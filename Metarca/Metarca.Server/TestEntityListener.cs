@@ -46,6 +46,6 @@ public class TestEntityListener : IEntityListener
     }
     public void OnStoppedByBounds(StopDirection direction)
     {
-        Console.WriteLine(direction.ToString());
+        // Console.WriteLine(direction.ToString());
     }
 }

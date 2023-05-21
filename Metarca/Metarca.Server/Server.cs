@@ -14,7 +14,8 @@ public class Server : ITickable
 {
     private readonly ServerManager serverManager = new();
     private readonly Zone zone = new();
-    private readonly Entity entity;
+    private readonly Entity entityA;
+    private readonly Entity entityB;
 
     public Server()
     {
@@ -22,8 +23,13 @@ public class Server : ITickable
 
         serverManager.packetProcessor.RegisterNestedType<DebugEntity>();
 
-        entity = new(zone, new(), new(), new TestEntityListener());
-        entity.WithBounds(new(new(new(-10, -5), new(10, 5))));
+        entityA = new Entity(zone, new(0, 1), new(), new TestEntityListener())
+            .WithBounds(new(new(new(-10, -5), new(10, 5))))
+            .WithRepulsion(new(true, true, 0.4f, 48, 3));
+
+        entityB = new Entity(zone, new(0, 3), new(), new TestEntityListener())
+            .WithBounds(new(new(new(-10, -5), new(10, 5))))
+            .WithRepulsion(new(true, true, 0.4f, 48, 3));
     }
 
     public void PollEvents()
@@ -48,30 +54,38 @@ public class Server : ITickable
 
         }
 
-        entity.AddForce(new(5 * MathF.Cos((float)time), -0.1f), Constants.SecondsPerTick);
+        entityA.AddForce(new(-10f, -40f), Constants.SecondsPerTick);
+        entityB.AddForce(new(-10, -40f), Constants.SecondsPerTick);
 
         zone.Step(time, Constants.SecondsPerTick);
         zone.Tick(time, tickId);
 
 
 
-        var debugEntity = new DebugEntity
+        var a = new DebugEntity
         {
             Id = 0,
-            X = entity.Position.X,
-            Y = entity.Position.Y
+            X = entityA.Position.X,
+            Y = entityA.Position.Y
+        };
+
+        var b = new DebugEntity
+        {
+            Id = 1,
+            X = entityB.Position.X,
+            Y = entityB.Position.Y
         };
 
         serverManager.SendPacketToAll(new DebugEntityPacket()
         {
-            Entities = new DebugEntity[] { debugEntity }
+            Entities = new DebugEntity[] { a, b }
         }, DeliveryMethod.Unreliable);
 
 
 
 
 
-        Console.Title = $"Tick Id: {tickId}, TPS: {Constants.TicksPerSecond}, Position: {entity.Position}, Velocity: {entity.Velocity}";
+        Console.Title = $"Tick Id: {tickId}, TPS: {Constants.TicksPerSecond}";
     }
 
     public void Stop()

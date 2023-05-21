@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using Metarca.Server.Physics.Types;
+﻿using System.Numerics;
 
 namespace Metarca.Server.Physics;
 
@@ -21,11 +15,6 @@ public class Zone : ISteppable, ITickable
     // <cellIndex, entities>
     private readonly Dictionary<uint, List<Entity>> cells = new();
     private readonly List<Entity>?[] nearbyCells = new List<Entity>?[9];
-
-    public Zone()
-    {
-
-    }
 
     public void Step(double time, double deltaTime)
     {

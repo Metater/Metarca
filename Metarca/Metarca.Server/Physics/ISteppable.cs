@@ -1,4 +1,4 @@
-﻿namespace Metarca.Server.Physics.Types;
+﻿namespace Metarca.Server.Physics;
 
 public interface ISteppable
 {
