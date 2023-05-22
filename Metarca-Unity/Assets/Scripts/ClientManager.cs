@@ -1,5 +1,6 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
@@ -9,12 +10,18 @@ public class ClientManager : MonoBehaviour, INetEventListener
     public static readonly NetPacketProcessor packetProcessor = new();
     private static readonly NetDataWriter writer = new();
     public static NetManager NetManager { get; private set; }
+    public static event Action PeerConnectedEvent;
+    public static event Action<DisconnectInfo> PeerDisconnectedEvent;
+    public static bool IsConnected { get; private set; } = false;
 
     private void Awake()
     {
         NetManager = new(this);
+    }
+
+    private void Start()
+    {
         NetManager.Start();
-        NetManager.Connect("localhost", 7777, "Metarca");
     }
 
     private void Update()
@@ -65,11 +72,15 @@ public class ClientManager : MonoBehaviour, INetEventListener
 
     public void OnPeerConnected(NetPeer peer)
     {
-
+        IsConnected = true;
+        PeerConnectedEvent?.Invoke();
+        print("Connected!");
     }
 
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
-
+        IsConnected = false;
+        PeerDisconnectedEvent?.Invoke(disconnectInfo);
+        print("Disconnected!");
     }
 }

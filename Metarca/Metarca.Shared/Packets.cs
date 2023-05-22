@@ -1,4 +1,5 @@
 ﻿using LiteNetLib.Utils;
+using System;
 
 #nullable disable
 namespace Metarca.Shared
@@ -8,6 +9,50 @@ namespace Metarca.Shared
         public static int SizeOf = 8;
 
         public double Time { get; set; }
+    }
+
+    public class InputPacket
+    {
+        public Data Input { get; set; }
+        
+        public struct Data : INetSerializable
+        {
+            private byte data;
+            private WASD wasd;
+
+            public WASD WASD
+            {
+                get
+                {
+                    return (WASD)(data & 0xF); // Extract and cast wasd data
+                }
+                set
+                {
+                    data &= 0xF0; // Keep only non-wasd data
+                    data |= (byte)(((int)value) & 0xF); // Slide in wasd data, ensuring it is only the 4 wasd bits
+                }
+            }
+
+            public void Serialize(NetDataWriter writer)
+            {
+                writer.Put(data);
+            }
+
+            public void Deserialize(NetDataReader reader)
+            {
+                data = reader.GetByte();
+            }
+        }
+
+        [Flags]
+        public enum WASD : byte
+        {
+            None = 0,
+            W = 1 << 0,
+            A = 1 << 1,
+            S = 1 << 2,
+            D = 1 << 3
+        }
     }
 
     public class DebugEntityPacket

@@ -23,6 +23,9 @@ public class Server : ITickable
 
         serverManager.packetProcessor.RegisterNestedType<DebugEntity>();
 
+        serverManager.packetProcessor.RegisterNestedType<InputPacket.Data>();
+        serverManager.packetProcessor.SubscribeReusable<InputPacket, NetPeer>(OnInputPacket);
+
         entityA = new Entity(zone, new(0, 1), new(), new TestEntityListener())
             .WithBounds(new(new(new(-10, -5), new(10, 5))))
             .WithRepulsion(new(true, true, 0.4f, 48, 3));
@@ -37,11 +40,15 @@ public class Server : ITickable
         serverManager.netManager.PollEvents();
     }
 
+    private int i;
+
     public void Tick(double time, ulong tickId)
     {
         if (tickId % Constants.TicksPerSecond == 0)
         {
             // Runs once per second
+            Console.WriteLine(i);
+            i = 0;
         }
 
         serverManager.SendPacketToAll(new TimePacket()
@@ -91,5 +98,10 @@ public class Server : ITickable
     public void Stop()
     {
         serverManager.netManager.Stop();
+    }
+
+    private void OnInputPacket(InputPacket packet, NetPeer peer)
+    {
+        i++;
     }
 }

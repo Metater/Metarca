@@ -31,7 +31,7 @@ public class ServerManager : INetEventListener
 
     public void OnConnectionRequest(ConnectionRequest request)
     {
-        request.AcceptIfKey("Metarca");
+        request.Accept();
     }
 
     public void OnNetworkError(IPEndPoint endPoint, SocketError socketError)

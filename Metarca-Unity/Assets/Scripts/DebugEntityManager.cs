@@ -1,3 +1,4 @@
+using LiteNetLib;
 using Metarca.Shared;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class DebugEntityManager : MonoBehaviour
     {
         ClientManager.packetProcessor.RegisterNestedType<DebugEntity>();
         ClientManager.packetProcessor.SubscribeReusable<DebugEntityPacket>(OnDebugEntityPacket);
+
+        ClientManager.PeerDisconnectedEvent += DespawnAll;
     }
 
     private void OnDebugEntityPacket(DebugEntityPacket packet)
@@ -29,5 +32,15 @@ public class DebugEntityManager : MonoBehaviour
 
             entity.AddSnapshot(position);
         }
+    }
+
+    private void DespawnAll(DisconnectInfo _)
+    {
+        foreach (var entity in entities.Values)
+        {
+            Destroy(entity.gameObject);
+        }
+
+        entities.Clear();
     }
 }
