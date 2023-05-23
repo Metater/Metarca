@@ -10,29 +10,14 @@ public class ClientManager : MonoBehaviour, INetEventListener
     public static readonly NetPacketProcessor packetProcessor = new();
     private static readonly NetDataWriter writer = new();
     public static NetManager NetManager { get; private set; }
+    public static bool IsConnected { get; private set; } = false;
     public static event Action PeerConnectedEvent;
     public static event Action<DisconnectInfo> PeerDisconnectedEvent;
-    public static bool IsConnected { get; private set; } = false;
 
-    private void Awake()
-    {
-        NetManager = new(this);
-    }
-
-    private void Start()
-    {
-        NetManager.Start();
-    }
-
-    private void Update()
-    {
-        NetManager.PollEvents();
-    }
-
-    private void OnApplicationQuit()
-    {
-        NetManager.Stop();
-    }
+    private void Awake() => NetManager = new(this);
+    private void Start() => NetManager.Start();
+    private void Update() => NetManager.PollEvents();
+    private void OnApplicationQuit() => NetManager.Stop();
 
     public static bool SendPacket<T>(T packet, DeliveryMethod deliveryMethod) where T : class, new()
     {
@@ -74,13 +59,11 @@ public class ClientManager : MonoBehaviour, INetEventListener
     {
         IsConnected = true;
         PeerConnectedEvent?.Invoke();
-        print("Connected!");
     }
 
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
         IsConnected = false;
         PeerDisconnectedEvent?.Invoke(disconnectInfo);
-        print("Disconnected!");
     }
 }

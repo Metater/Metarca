@@ -1,30 +1,37 @@
 ﻿using Metarca.Shared;
 using LiteNetLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Metarca.Server.Physics;
-using Metarca.Server.Physics.Config;
+using Metarca.Shared.Packets;
+using Metarca.Server.Interfaces;
+using LiteNetLib.Utils;
 
 namespace Metarca.Server;
 
 public class Server : ITickable
 {
-    private readonly ServerManager serverManager = new();
+    private readonly EventBasedNetListener listener = new();
+    private readonly NetManager netManager;
+    private readonly NetPacketProcessor packetProcessor = new();
+    private readonly NetDataWriter writer = new();
+
     private readonly Zone zone = new();
     private readonly Entity entityA;
     private readonly Entity entityB;
 
     public Server()
     {
-        serverManager.netManager.Start(7777);
+        listener.ConnectionRequestEvent += request => request.Accept();
+        listener.NetworkReceiveEvent += (peer, reader, channelNumber, deliveryMethod) => packetProcessor.ReadAllPackets(reader);
 
-        serverManager.packetProcessor.RegisterNestedType<DebugEntity>();
+        netManager = new(listener)
+        {
+            AutoRecycle = true
+        };
 
-        serverManager.packetProcessor.RegisterNestedType<InputPacket.Data>();
-        serverManager.packetProcessor.SubscribeReusable<InputPacket, NetPeer>(OnInputPacket);
+        packetProcessor.RegisterNestedType<DebugEntity>();
+
+        packetProcessor.RegisterNestedType<InputPacket.Data>();
+        packetProcessor.SubscribeReusable<InputPacket, NetPeer>(OnInputPacket);
 
         entityA = new Entity(zone, new(0, 1), new(), new TestEntityListener())
             .WithBounds(new(new(new(-10, -5), new(10, 5))))
@@ -33,25 +40,23 @@ public class Server : ITickable
         entityB = new Entity(zone, new(0, 3), new(), new TestEntityListener())
             .WithBounds(new(new(new(-10, -5), new(10, 5))))
             .WithRepulsion(new(true, true, 0.4f, 48, 3));
+
+        netManager.Start(7777);
     }
 
     public void PollEvents()
     {
-        serverManager.netManager.PollEvents();
+        netManager.PollEvents();
     }
-
-    private int i;
 
     public void Tick(double time, ulong tickId)
     {
         if (tickId % Constants.TicksPerSecond == 0)
         {
             // Runs once per second
-            Console.WriteLine(i);
-            i = 0;
         }
 
-        serverManager.SendPacketToAll(new TimePacket()
+        SendPacketToAll(new TimePacket()
         {
             Time = time
         }, DeliveryMethod.Unreliable);
@@ -61,8 +66,8 @@ public class Server : ITickable
 
         }
 
-        entityA.AddForce(new(-10f, -40f), Constants.SecondsPerTick);
-        entityB.AddForce(new(-10, -40f), Constants.SecondsPerTick);
+        entityA.AddForce(new(-2f, -800f), Constants.SecondsPerTick);
+        entityB.AddForce(new(-3, -800f), Constants.SecondsPerTick);
 
         zone.Step(time, Constants.SecondsPerTick);
         zone.Tick(time, tickId);
@@ -83,7 +88,7 @@ public class Server : ITickable
             Y = entityB.Position.Y
         };
 
-        serverManager.SendPacketToAll(new DebugEntityPacket()
+        SendPacketToAll(new DebugEntityPacket()
         {
             Entities = new DebugEntity[] { a, b }
         }, DeliveryMethod.Unreliable);
@@ -97,11 +102,26 @@ public class Server : ITickable
 
     public void Stop()
     {
-        serverManager.netManager.Stop();
+        netManager.Stop();
     }
 
     private void OnInputPacket(InputPacket packet, NetPeer peer)
     {
-        i++;
+        Console.WriteLine(packet.Input.WASD);
     }
+
+    #region Send Packet To
+    public void SendPacketToPeer<T>(NetPeer peer, T packet, DeliveryMethod deliveryMethod) where T : class, new()
+    {
+        writer.Reset();
+        packetProcessor.Write(writer, packet);
+        peer.Send(writer, deliveryMethod);
+    }
+    public void SendPacketToAll<T>(T packet, DeliveryMethod deliveryMethod) where T : class, new()
+    {
+        writer.Reset();
+        packetProcessor.Write(writer, packet);
+        netManager.SendToAll(writer, deliveryMethod);
+    }
+    #endregion
 }

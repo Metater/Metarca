@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace Metarca.Server.Physics.Types;
 
-public interface IEntityListener : ISteppable, ITickable
+public interface IEntityListener
 {
+    public virtual void OnStepped(double time, double deltaTime) { }
+    public virtual void OnTicked(double time, ulong tickId) { }
     public virtual void OnChangedCell(uint? oldCellIndex, uint newCellIndex) { }
     public virtual void OnMoved(Vector2? oldPosition, Vector2 newPosition) { }
     public virtual void OnAccelerated(Vector2? oldVelocity, Vector2 newVelocity) { }

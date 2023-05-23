@@ -1,8 +1,7 @@
 using LiteNetLib;
 using Metarca.Shared;
+using Metarca.Shared.Packets;
 using Mirror;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
@@ -25,19 +24,19 @@ public class InputManager : MonoBehaviour
         {
             InputPacket.WASD wasd = InputPacket.WASD.None;
 
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKey(KeyCode.W))
             {
                 wasd |= InputPacket.WASD.W;
             }
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKey(KeyCode.A))
             {
                 wasd |= InputPacket.WASD.A;
             }
-            if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKey(KeyCode.S))
             {
                 wasd |= InputPacket.WASD.S;
             }
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKey(KeyCode.D))
             {
                 wasd |= InputPacket.WASD.D;
             }

@@ -15,13 +15,7 @@ public class ConnectionManager : MonoBehaviour
         Connect();
     }
 
-    private void PeerDisconnectedEvent(DisconnectInfo disconnectInfo)
-    {
-        Connect();
-    }
+    private void PeerDisconnectedEvent(DisconnectInfo disconnectInfo) => Connect();
 
-    private void Connect()
-    {
-        ClientManager.NetManager.Connect(address, port, connectionData);
-    }
+    private void Connect() => ClientManager.NetManager.Connect(address, port, connectionData);
 }

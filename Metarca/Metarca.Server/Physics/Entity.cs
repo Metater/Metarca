@@ -1,4 +1,5 @@
-﻿using Metarca.Server.Physics.Config;
+﻿using Metarca.Server.Interfaces;
+using Metarca.Server.Physics.Config;
 using Metarca.Server.Physics.Types;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Metarca.Server.Physics;
 
-public class Entity : ISteppable, ITickable
+public class Entity : ISteppable, ITickable, IEntityListener
 {
     private const float DefaultVelocityEpsilon = 1f / 256f;
 
@@ -97,7 +98,7 @@ public class Entity : ISteppable, ITickable
 
     public Entity(Zone zone, Vector2 position, Vector2 velocity, params IEntityListener[] listeners)
     {
-        List<IEntityListener> entityListeners = new();
+        List<IEntityListener> entityListeners = new() { this };
         entityListeners.AddRange(listeners);
         events = new(entityListeners);
 
@@ -221,12 +222,12 @@ public class Entity : ISteppable, ITickable
             Position = desiredPosition;
         }
 
-        events.Step(time, deltaTime);
+        events.OnStepped(time, deltaTime);
     }
 
     public void Tick(double time, ulong tickId)
     {
-        events.Tick(time, tickId);
+        events.OnTicked(time, tickId);
     }
 
     public void AddForce(Vector2 force, double deltaTime)

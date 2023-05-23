@@ -2,15 +2,14 @@
 using Metarca.Shared;
 using System.Diagnostics;
 
+Console.WriteLine("Hello, World!");
+
 CancellationTokenSource cts = new();
 Console.CancelKeyPress += (s, e) =>
 {
-    Console.WriteLine("Cancelling...");
     cts.Cancel();
     e.Cancel = true;
 };
-
-Console.WriteLine("Hello, World!");
 
 Server server = new();
 
@@ -20,7 +19,8 @@ while (!cts.IsCancellationRequested)
 {
 	server.PollEvents();
 
-	while ((stopwatch.Elapsed.TotalSeconds * Constants.TicksPerSecond) > tickId)
+	// Tick until caught up
+    while ((stopwatch.Elapsed.TotalSeconds * Constants.TicksPerSecond) > tickId)
 	{
 		double time = stopwatch.Elapsed.TotalSeconds;
         server.Tick(time, tickId++);
@@ -30,6 +30,7 @@ while (!cts.IsCancellationRequested)
 }
 
 server.Stop();
+Console.WriteLine("Stopped.");
 
 /*
 aspect ratio of screen is sent on connect, view area is a constant,
@@ -73,6 +74,5 @@ use spacial hashing, maybe it is a square region
 create and join factions somehow, faction leader
 players can be human controlled or computer, anything goes!!!!!!!!!!!!!! nothing is bannable, anything is allowed, no rules
 explosives
-if data doesnt fit into the packet too bad!, randomize order of things sent maybe?
 
  */

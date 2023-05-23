@@ -6,16 +6,15 @@ namespace Metarca.Server;
 
 public class TestEntityListener : IEntityListener
 {
-    public void Step(double time, double deltaTime)
+    public void OnStepped(double time, double deltaTime)
     {
         
     }
 
-    public void Tick(double time, ulong tickId)
+    public void OnTicked(double time, ulong tickId)
     {
         
     }
-
     public void OnChangedCell(uint? oldCellIndex, uint newCellIndex)
     {
         Console.WriteLine(newCellIndex);
