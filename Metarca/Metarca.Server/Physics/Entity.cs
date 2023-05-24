@@ -1,12 +1,6 @@
-﻿using Metarca.Server.Interfaces;
-using Metarca.Server.Physics.Config;
+﻿using Metarca.Server.Physics.Config;
 using Metarca.Server.Physics.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Metarca.Server.Physics;
 
@@ -140,6 +134,9 @@ public class Entity : ISteppable, ITickable, IEntityListener
 
     public void Step(double time, double deltaTime)
     {
+        // TODO Add static colliders like efficax-game, dont merge into entities unnaturally
+        // TODO Add drag
+        // TODO Add collisions
         // TODO try teleport method, check bounds and nearby colliders
         // TODO check position method in Zone, used for checking if it is safe to spawn an entity
 
@@ -225,9 +222,9 @@ public class Entity : ISteppable, ITickable, IEntityListener
         events.OnStepped(time, deltaTime);
     }
 
-    public void Tick(double time, ulong tickId)
+    public void Tick()
     {
-        events.OnTicked(time, tickId);
+        events.OnTicked();
     }
 
     public void AddForce(Vector2 force, double deltaTime)

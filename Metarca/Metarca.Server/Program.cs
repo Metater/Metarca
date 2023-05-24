@@ -1,6 +1,4 @@
 ﻿using Metarca.Server;
-using Metarca.Shared;
-using System.Diagnostics;
 
 Console.WriteLine("Hello, World!");
 
@@ -13,20 +11,19 @@ Console.CancelKeyPress += (s, e) =>
 
 Server server = new();
 
-ulong tickId = 0;
-Stopwatch stopwatch = Stopwatch.StartNew();
+server.Start();
+Time.Start();
+Console.WriteLine("Started.");
+
 while (!cts.IsCancellationRequested)
 {
-	server.PollEvents();
-
 	// Tick until caught up
-    while ((stopwatch.Elapsed.TotalSeconds * Constants.TicksPerSecond) > tickId)
+    while (Time.ShouldTick())
 	{
-		double time = stopwatch.Elapsed.TotalSeconds;
-        server.Tick(time, tickId++);
+        server.Tick();
 	}
 
-	Thread.Sleep(15);
+	Thread.Sleep(1);
 }
 
 server.Stop();

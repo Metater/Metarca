@@ -23,7 +23,7 @@ public class EntityEvents : IEntityListener
     }
 
     public void OnStepped(double time, double deltaTime) => listeners.ForEach(l => l.OnStepped(time, deltaTime));
-    public void OnTicked(double time, ulong tickId) => listeners.ForEach(l => l.OnTicked(time, tickId));
+    public void OnTicked() => listeners.ForEach(l => l.OnTicked());
     public void OnChangedCell(uint? oldCellIndex, uint newCellIndex) => listeners.ForEach(l => l.OnChangedCell(oldCellIndex, newCellIndex));
     public void OnMoved(Vector2? oldPosition, Vector2 newPosition) => listeners.ForEach(l => l.OnMoved(oldPosition, newPosition));
     public void OnAccelerated(Vector2? oldVelocity, Vector2 newVelocity) => listeners.ForEach(l => l.OnAccelerated(oldVelocity, newVelocity));

@@ -2,8 +2,8 @@
 using LiteNetLib;
 using Metarca.Server.Physics;
 using Metarca.Shared.Packets;
-using Metarca.Server.Interfaces;
 using LiteNetLib.Utils;
+using Metarca.Server.Systems;
 
 namespace Metarca.Server;
 
@@ -12,116 +12,85 @@ public class Server : ITickable
     private readonly EventBasedNetListener listener = new();
     private readonly NetManager netManager;
     private readonly NetPacketProcessor packetProcessor = new();
-    private readonly NetDataWriter writer = new();
+    private readonly NetOut netOut;
 
     private readonly Zone zone = new();
-    private readonly Entity entityA;
-    private readonly Entity entityB;
+
+    private readonly List<System> systems = new();
+    private readonly Dictionary<Type, System> systemsDictionary = new();
 
     public Server()
     {
-        listener.ConnectionRequestEvent += request => request.Accept();
-        listener.NetworkReceiveEvent += (peer, reader, channelNumber, deliveryMethod) => packetProcessor.ReadAllPackets(reader);
-
         netManager = new(listener)
         {
             AutoRecycle = true
         };
 
-        packetProcessor.RegisterNestedType<DebugEntity>();
+        netOut = new(netManager, packetProcessor);
 
-        packetProcessor.RegisterNestedType<InputPacket.Data>();
-        packetProcessor.SubscribeReusable<InputPacket, NetPeer>(OnInputPacket);
-
-        entityA = new Entity(zone, new(0, 1), new(), new TestEntityListener())
-            .WithBounds(new(new(new(-10, -5), new(10, 5))))
-            .WithRepulsion(new(true, true, 0.4f, 48, 3));
-
-        entityB = new Entity(zone, new(0, 3), new(), new TestEntityListener())
-            .WithBounds(new(new(new(-10, -5), new(10, 5))))
-            .WithRepulsion(new(true, true, 0.4f, 48, 3));
-
-        netManager.Start(7777);
+        // Initialize systems
+        System.Deps deps = new(this, listener, netManager, packetProcessor, netOut);
+        Add(new ConnectionSystem(deps));
+        Add(new NetInSystem(deps));
+        Add(new TimeSyncSystem(deps));
+        Add(new InputSystem(deps));
+        Add(new WorldSystem(deps));
     }
 
-    public void PollEvents()
+    public void Start()
+    {
+        netManager.Start(7777);
+
+        foreach (var system in systems)
+        {
+            system.Awake();
+        }
+
+        foreach (var system in systems)
+        {
+            system.Start();
+        }
+    }
+
+    public void Tick()
     {
         netManager.PollEvents();
-    }
 
-    public void Tick(double time, ulong tickId)
-    {
-        if (tickId % Constants.TicksPerSecond == 0)
+        zone.Step(Time.TickTime, Constants.SecondsPerTick);
+        zone.Tick();
+
+        foreach (var system in systems)
         {
-            // Runs once per second
+            system.Tick();
         }
 
-        SendPacketToAll(new TimePacket()
+        if (Time.TickId % Constants.TicksPerSecond == 0)
         {
-            Time = time
-        }, DeliveryMethod.Unreliable);
-
-        if (tickId % Constants.TicksPerSecondMultiplier == 0)
-        {
-
+            Console.Title = $"TPS: {Constants.TicksPerSecond} | Uptime: {(ulong)Time.Now}s | Tick Id: {Time.TickId} | Time Per Tick: {(Time.Now - Time.TickTime) * 1000.0:0.000}ms";
         }
-
-        entityA.AddForce(new(-2f, -800f), Constants.SecondsPerTick);
-        entityB.AddForce(new(-3, -800f), Constants.SecondsPerTick);
-
-        zone.Step(time, Constants.SecondsPerTick);
-        zone.Tick(time, tickId);
-
-
-
-        var a = new DebugEntity
-        {
-            Id = 0,
-            X = entityA.Position.X,
-            Y = entityA.Position.Y
-        };
-
-        var b = new DebugEntity
-        {
-            Id = 1,
-            X = entityB.Position.X,
-            Y = entityB.Position.Y
-        };
-
-        SendPacketToAll(new DebugEntityPacket()
-        {
-            Entities = new DebugEntity[] { a, b }
-        }, DeliveryMethod.Unreliable);
-
-
-
-
-
-        Console.Title = $"Tick Id: {tickId}, TPS: {Constants.TicksPerSecond}";
     }
 
     public void Stop()
     {
         netManager.Stop();
+
+        foreach (var system in systems)
+        {
+            system.Stop();
+        }
     }
 
-    private void OnInputPacket(InputPacket packet, NetPeer peer)
+    #region System Lifetime
+    private void Add<T>(T system) where T : System
     {
-        Console.WriteLine(packet.Input.WASD);
+        systems.Add(system);
+        Type type = system.GetType();
+        systemsDictionary.Add(type, system);
+        Console.WriteLine($"Initialized \"{type.Name}\"");
     }
-
-    #region Send Packet To
-    public void SendPacketToPeer<T>(NetPeer peer, T packet, DeliveryMethod deliveryMethod) where T : class, new()
+    public T Get<T>() where T : System
     {
-        writer.Reset();
-        packetProcessor.Write(writer, packet);
-        peer.Send(writer, deliveryMethod);
-    }
-    public void SendPacketToAll<T>(T packet, DeliveryMethod deliveryMethod) where T : class, new()
-    {
-        writer.Reset();
-        packetProcessor.Write(writer, packet);
-        netManager.SendToAll(writer, deliveryMethod);
+        return (T)systemsDictionary[typeof(T)];
     }
     #endregion
 }

@@ -5,7 +5,7 @@ namespace Metarca.Server.Physics.Types;
 public interface IEntityListener
 {
     public virtual void OnStepped(double time, double deltaTime) { }
-    public virtual void OnTicked(double time, ulong tickId) { }
+    public virtual void OnTicked() { }
     public virtual void OnChangedCell(uint? oldCellIndex, uint newCellIndex) { }
     public virtual void OnMoved(Vector2? oldPosition, Vector2 newPosition) { }
     public virtual void OnAccelerated(Vector2? oldVelocity, Vector2 newVelocity) { }

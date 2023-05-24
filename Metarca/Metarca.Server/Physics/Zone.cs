@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using Metarca.Server.Interfaces;
 
 namespace Metarca.Server.Physics;
 
@@ -25,11 +24,11 @@ public class Zone : ISteppable, ITickable
         }
     }
 
-    public void Tick(double time, ulong tickId)
+    public void Tick()
     {
         foreach (var entity in entities)
         {
-            entity.Tick(time, tickId);
+            entity.Tick();
         }
     }
 
