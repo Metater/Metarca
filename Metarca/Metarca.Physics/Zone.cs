@@ -15,7 +15,7 @@ public class Zone : IRegistry<Entity>
     public Zone(IEntityListener listener)
     {
         this.listener = listener;
-        stepSystem = new(partitionSystem);
+        stepSystem = new(listener, partitionSystem);
     }
 
     public bool Add(Entity entity)

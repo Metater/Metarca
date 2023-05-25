@@ -1,13 +1,9 @@
-﻿using System.Numerics;
-
-namespace Metarca.Physics.Public;
+﻿namespace Metarca.Physics.Public;
 
 public interface IEntityListener
 {
-    public virtual void OnEarlyStep(Entity entity, double time, double deltaTime) { }
-    public virtual void OnLateStep(Entity entity, double time, double deltaTime) { }
-    public virtual void OnMove(Entity entity, Vector2? oldPosition, Vector2 newPosition) { }
-    public virtual void OnAccelerate(Entity entity, Vector2? oldVelocity, Vector2 newVelocity) { }
+    public virtual void OnEarlySimulate(Entity entity, double time, double deltaTime) { }
+    public virtual void OnLateSimulate(Entity entity, double time, double deltaTime) { }
     public virtual void OnSelfRepulseOther(Entity self, Entity other) { }
     public virtual void OnOtherRepulseSelf(Entity self, Entity other) { }
     public virtual void OnSelfStopOther(Entity self, Entity other, StopDirection direction) { }
