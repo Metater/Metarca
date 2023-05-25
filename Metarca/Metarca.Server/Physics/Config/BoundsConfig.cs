@@ -1,24 +1,26 @@
 ﻿using Metarca.Server.Physics.Types;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Metarca.Server.Physics.Config;
 
-public struct ColliderConfig
+public struct BoundsConfig
 {
     public bool enabled;
-    public bool isTrigger;
     public Collider collider;
 
-    public ColliderConfig()
+    public BoundsConfig()
     {
         enabled = false;
-        isTrigger = false;
         collider = new();
     }
 
-    public ColliderConfig(bool isTrigger, Collider collider)
+    public BoundsConfig(Collider collider)
     {
         enabled = true;
-        this.isTrigger = isTrigger;
         this.collider = collider;
     }
 }

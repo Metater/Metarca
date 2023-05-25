@@ -1,4 +1,5 @@
 ﻿using Metarca.Server.Physics;
+using Metarca.Shared;
 
 namespace Metarca.Server.Systems;
 
@@ -11,5 +12,8 @@ public class WorldSystem : System
 
     }
 
-
+    public override void Tick()
+    {
+        zone.Step(Time.TickTime, Constants.SecondsPerTick);
+    }
 }

@@ -4,6 +4,8 @@ using Metarca.Server.Physics;
 using Metarca.Shared.Packets;
 using LiteNetLib.Utils;
 using Metarca.Server.Systems;
+using Metarca.Server.Systems.Player;
+using Metarca.Server.Ecs;
 
 namespace Metarca.Server;
 
@@ -30,11 +32,18 @@ public class Server : ITickable
 
         // Initialize systems
         System.Deps deps = new(this, listener, netManager, packetProcessor, netOut);
+
         Add(new ConnectionSystem(deps));
         Add(new NetInSystem(deps));
         Add(new TimeSyncSystem(deps));
+
         Add(new InputSystem(deps));
+
         Add(new WorldSystem(deps));
+
+        Add(new PlayerInitSystem(deps));
+        Add(new PlayerCleanupSystem(deps));
+        Add(new PlayerSystem(deps));
     }
 
     public void Start()

@@ -52,7 +52,6 @@ public class ConnectionSystem : System
     }
     private void PeerConnected(NetPeer peer)
     {
-        peer.Tag = Get<PlayerInitSystem>().ConstructPlayerData();
         PeerConnectedEvent?.Invoke(peer);
     }
     private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)

@@ -11,6 +11,6 @@ public class NetInSystem : System
 
     private void NetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
     {
-        packetProcessor.ReadAllPackets(reader);
+        packetProcessor.ReadAllPackets(reader, peer);
     }
 }

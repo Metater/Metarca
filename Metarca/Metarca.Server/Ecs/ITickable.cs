@@ -1,4 +1,4 @@
-﻿namespace Metarca.Server;
+﻿namespace Metarca.Server.Ecs;
 
 public interface ITickable
 {

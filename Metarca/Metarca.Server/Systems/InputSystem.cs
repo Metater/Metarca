@@ -14,6 +14,6 @@ public class InputSystem : System
 
     private void OnInputPacket(InputPacket packet, NetPeer peer)
     {
-        // peer.GetPlayerData()
+        peer.GetPlayerData().Entity.SupplyInputData(packet.Input);
     }
 }

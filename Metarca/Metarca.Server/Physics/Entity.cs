@@ -1,4 +1,5 @@
-﻿using Metarca.Server.Physics.Config;
+﻿using Metarca.Server.Ecs;
+using Metarca.Server.Physics.Config;
 using Metarca.Server.Physics.Types;
 using System.Numerics;
 
@@ -9,7 +10,7 @@ public class Entity : ISteppable, ITickable, IEntityListener
     private const float DefaultVelocityEpsilon = 1f / 256f;
 
     private ColliderConfig collider = new();
-    private ColliderConfig bounds = new();
+    private BoundsConfig bounds = new();
     private DragConfig drag = new();
     private RepulsionConfig repulsion = new();
     private VelocityEpsilonConfig velocityEpsilon = new(DefaultVelocityEpsilon);
@@ -38,7 +39,7 @@ public class Entity : ISteppable, ITickable, IEntityListener
                 Zone.RemoveEntity(this, oldOccupiedCellIndex.Value);
             }
 
-            events.OnChangedCell(oldOccupiedCellIndex, value);
+            events.OnCellChange(oldOccupiedCellIndex, value);
         }
     }
     public Vector2 Position
@@ -57,7 +58,7 @@ public class Entity : ISteppable, ITickable, IEntityListener
             Vector2? oldPosition = position;
             position = value;
 
-            events.OnMoved(oldPosition, value);
+            events.OnMove(oldPosition, value);
 
             uint actualCellIndex = Zone.GetCellIndex(value);
             if (actualCellIndex != OccupiedCellIndex)
@@ -82,7 +83,7 @@ public class Entity : ISteppable, ITickable, IEntityListener
             Vector2? oldVelocity = velocity;
             velocity = value;
 
-            events.OnAccelerated(oldVelocity, value);
+            events.OnAccelerate(oldVelocity, value);
         }
     }
     public ulong LayerMask { get; set; } = ulong.MaxValue;
@@ -110,7 +111,7 @@ public class Entity : ISteppable, ITickable, IEntityListener
         this.collider = collider;
         return this;
     }
-    public Entity WithBounds(ColliderConfig bounds)
+    public Entity WithBounds(BoundsConfig bounds)
     {
         this.bounds = bounds;
         return this;
@@ -140,6 +141,8 @@ public class Entity : ISteppable, ITickable, IEntityListener
         // TODO try teleport method, check bounds and nearby colliders
         // TODO check position method in Zone, used for checking if it is safe to spawn an entity
 
+        events.OnEarlyStep(time, deltaTime);
+
         if (repulsion.canBeRepulsed)
         {
             Vector2 force = Vector2.Zero;
@@ -149,10 +152,10 @@ public class Entity : ISteppable, ITickable, IEntityListener
                 Entity repulsor = nearby.Current;
                 if (repulsor == this) continue;
                 force += GetRepulsionForce(repulsor);
-                repulsor.events.OnRepulsedOther(this);
-                events.OnRepulsedSelf(repulsor);
+                repulsor.events.OnOtherRepulse(this);
+                events.OnSelfRepulse(repulsor);
             }
-            AddForce(force, deltaTime);
+            ApplyForce(force, deltaTime);
         }
 
         if (velocityEpsilon.enabled)
@@ -212,22 +215,27 @@ public class Entity : ISteppable, ITickable, IEntityListener
 
                 if (boundsDirection != StopDirection.None)
                 {
-                    events.OnStoppedByBounds(boundsDirection);
+                    events.OnBoundsStop(boundsDirection);
                 }
             }
 
             Position = desiredPosition;
+
+            if (drag.enabled)
+            {
+                Velocity *= 1.0f - (drag.force * (float)deltaTime);
+            }
         }
 
-        events.OnStepped(time, deltaTime);
+        events.OnLateStep(time, deltaTime);
     }
 
     public void Tick()
     {
-        events.OnTicked();
+        events.OnTick();
     }
 
-    public void AddForce(Vector2 force, double deltaTime)
+    public void ApplyForce(Vector2 force, double deltaTime)
     {
         Velocity += force * (float)deltaTime;
     }

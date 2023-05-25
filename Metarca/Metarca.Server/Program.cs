@@ -12,8 +12,8 @@ Console.CancelKeyPress += (s, e) =>
 Server server = new();
 
 server.Start();
-Time.Start();
 Console.WriteLine("Started.");
+Time.Start();
 
 while (!cts.IsCancellationRequested)
 {
@@ -30,6 +30,13 @@ server.Stop();
 Console.WriteLine("Stopped.");
 
 /*
+TODO BREAK UP PHYSICS INTO Metarca.Physics
+could do Metarca.Ecs if necessary
+
+THis could be like invaders, placement isnt tile-based, it is areas and regions, the floor can be tiles, but not for placement, you can place anywhere that isnt inside of a wall?
+
+
+ * 
 aspect ratio of screen is sent on connect, view area is a constant,
 ^^^
 server calculates width and hieght of the view area to figure out what client should see
