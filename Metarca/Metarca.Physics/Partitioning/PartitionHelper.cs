@@ -2,7 +2,7 @@
 
 namespace Metarca.Physics.Partitioning;
 
-internal static class PartitionUtility
+internal static class PartitionHelper
 {
     private const uint CellSize = 16;
     private const uint HalfCellSize = CellSize / 2;

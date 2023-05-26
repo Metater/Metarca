@@ -25,7 +25,9 @@ internal class SimulationSystem
             {
                 if (other == entity) continue;
                 if (!other.repulsion.canRepulseOthers) continue;
-                force += 
+                force += RepulsionMath.GetForceOnSelf(entity, other);
+                listener.OnOtherRepulseSelf(entity, other);
+                listener.OnSelfRepulseOther(other, entity);
             }
         }
 

@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace Metarca.Physics.Simulation;
 
-public static class RepulsionUtility
+internal static class RepulsionMath
 {
-    private Vector2 GetRepulsionForce(Entity Entity repulsor)
+    internal static Vector2 GetForceOnSelf(Entity self, Entity other)
     {
-        float distanceX = repulsor.Position.X - Position.X;
-        float distanceY = repulsor.Position.Y - Position.Y;
+        float distanceX = other.Position.X - self.Position.X;
+        float distanceY = other.Position.Y - self.Position.Y;
         float squareDistance = distanceX * distanceX + distanceY * distanceY;
-        float minDistance = repulsion.radius + repulsor.repulsion.radius;
+        float minDistance = self.repulsion.radius + other.repulsion.radius;
 
         if (minDistance * minDistance > squareDistance)
         {
-            float minMaxRepulsionForce = Math.Min(repulsion.maxMagnitude, repulsor.repulsion.maxMagnitude);
+            float minMaxRepulsionForce = Math.Min(self.repulsion.maxMagnitude, other.repulsion.maxMagnitude);
 
             if (squareDistance != 0)
             {
-                float repulsionMagnitude = (repulsion.force + repulsor.repulsion.force) * (1 / squareDistance);
+                float repulsionMagnitude = (self.repulsion.force + other.repulsion.force) * (1 / squareDistance);
                 repulsionMagnitude = Math.Clamp(repulsionMagnitude, -minMaxRepulsionForce, minMaxRepulsionForce);
                 float reciprocalDistance = MathF.ReciprocalSqrtEstimate(squareDistance);
                 return new Vector2(distanceX * reciprocalDistance, distanceY * reciprocalDistance) * -repulsionMagnitude;

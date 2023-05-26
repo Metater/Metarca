@@ -15,7 +15,13 @@ public abstract class Entity
     public VelocityEpsilonConfig velocityEpsilon = new(DefaultVelocityEpsilon);
 
     public uint? CellId { get; internal set; }
-    public Vector2? Position { get; internal set; }
-    public Vector2? Velocity { get; set; }
+    public Vector2 Position { get; internal set; }
+    public Vector2 Velocity { get; set; }
     public ulong LayerMask { get; set; } = ulong.MaxValue; // Usage: if self.LayerMask & other.LayerMask != 0, then they should interact
+
+    public Entity(Vector2 position, Vector2 velocity)
+    {
+        Position = position;
+        Velocity = velocity;
+    }
 }

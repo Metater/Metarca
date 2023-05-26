@@ -27,7 +27,7 @@ internal class PartitionSystem : ISurroundingProvider
 
     public IEnumerable<Entity> GetSurroundingEntities(uint cellId)
     {
-        (ushort x, ushort y) = PartitionUtility.GetCoords(cellId);
+        (ushort x, ushort y) = PartitionHelper.GetCoords(cellId);
 
         foreach ((int offsetX, int offsetY) in SurroundingOffsets)
         {
@@ -40,7 +40,7 @@ internal class PartitionSystem : ISurroundingProvider
 
     private IEnumerable<Entity> GetEntitiesAtCoords(ushort x, ushort y)
     {
-        uint cellId = PartitionUtility.GetCellId(x, y);
+        uint cellId = PartitionHelper.GetCellId(x, y);
 
         if (!cells.TryGetValue(cellId, out var cell))
         {
