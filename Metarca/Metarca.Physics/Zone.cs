@@ -7,10 +7,11 @@ namespace Metarca.Physics;
 public class Zone : IRegistry<Entity>
 {
     private readonly IEntityListener listener;
-    private readonly List<Entity> entities = new();
-    private readonly List<Entity> stepEntities = new();
     private readonly PartitionSystem partitionSystem = new();
     private readonly SimulationSystem stepSystem;
+
+    private readonly List<Entity> entities = new();
+    private readonly List<Entity> stepEntities = new();
 
     public Zone(IEntityListener listener)
     {
@@ -31,9 +32,9 @@ public class Zone : IRegistry<Entity>
 
     public void Step(double time, double deltaTime)
     {
-        // Told here if entity moved cells to connect step and partition system
         stepEntities.Clear();
         stepEntities.AddRange(entities);
+
         foreach (var entity in stepEntities)
         {
             bool moved = stepSystem.Simulate(entity, time, deltaTime);
