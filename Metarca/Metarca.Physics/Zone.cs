@@ -1,5 +1,4 @@
 ﻿using Metarca.Physics.Partitioning;
-using Metarca.Physics.Public;
 using Metarca.Physics.Simulation;
 
 namespace Metarca.Physics;

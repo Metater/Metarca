@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Metarca.Physics.Public;
+namespace Metarca.Physics;
 
 public interface IRegistry<T>
 {

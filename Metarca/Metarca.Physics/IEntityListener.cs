@@ -1,4 +1,4 @@
-﻿namespace Metarca.Physics.Public;
+﻿namespace Metarca.Physics;
 
 public interface IEntityListener
 {

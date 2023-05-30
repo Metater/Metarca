@@ -1,5 +1,4 @@
-﻿using Metarca.Physics.Public;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Metarca.Physics.Simulation;
 
