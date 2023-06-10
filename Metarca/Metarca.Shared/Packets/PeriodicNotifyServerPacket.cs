@@ -3,11 +3,11 @@ using LiteNetLib.Utils;
 
 namespace Metarca.Shared.Packets;
 
-public class PeriodicNotifyServerPacket
+public class PeriodicNotifyServerPacket : IPoolable
 {
     public static int SizeOf = 1;
 
-    public Data Notification { get; set; }
+    public Data Packet { get; set; }
 
     public struct Data : INetSerializable
     {

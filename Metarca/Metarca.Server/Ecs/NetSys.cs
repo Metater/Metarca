@@ -3,7 +3,7 @@ using LiteNetLib.Utils;
 
 namespace Metarca.Server.Ecs;
 
-public abstract class NetSys : Sys
+public abstract class DepsSys : Sys
 {
     public record Deps(EventBasedNetListener Listener, NetManager NetManager, NetPacketProcessor PacketProcessor, NetOut NetOut);
 
@@ -13,7 +13,7 @@ public abstract class NetSys : Sys
     protected readonly NetPacketProcessor packetProcessor;
     private readonly NetOut netOut;
 
-    public NetSys(Deps deps, Sys? parent = null) : base(parent)
+    public DepsSys(Deps deps, Sys? parent = null) : base(parent)
     {
         this.deps = deps;
         listener = deps.Listener;

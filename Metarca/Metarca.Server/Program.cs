@@ -1,5 +1,5 @@
-﻿using LiteNetLib.Utils;
-using LiteNetLib;
+﻿using LiteNetLib;
+using LiteNetLib.Utils;
 using Metarca.Server;
 using Metarca.Server.Ecs;
 using Metarca.Shared;
@@ -24,7 +24,7 @@ NetManager netManager = new(listener)
 NetPacketProcessor packetProcessor = new();
 NetOut netOut = new(netManager, packetProcessor);
 
-NetSys.Deps deps = new(listener, netManager, packetProcessor, netOut);
+DepsSys.Deps deps = new(listener, netManager, packetProcessor, netOut);
 
 RootSys root = new(deps);
 

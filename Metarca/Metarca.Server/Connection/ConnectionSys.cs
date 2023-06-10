@@ -4,7 +4,7 @@ using Metarca.Shared.Packets;
 
 namespace Metarca.Server.Connection;
 
-public class ConnectionSys : NetSys
+public class ConnectionSys : DepsSys
 {
     public delegate void OnVerifyPeerConnectionData(ConnectionDataPacket packet, Rejector rejector);
     public event OnVerifyPeerConnectionData? VerifyPeerConnectionEvent;

@@ -1,9 +1,10 @@
 ﻿using Metarca.Server.Connection;
 using Metarca.Server.Ecs;
+using Metarca.Shared;
 
 namespace Metarca.Server;
 
-public class RootSys : NetSys
+public class RootSys : DepsSys
 {
     public RootSys(Deps deps) : base(deps)
     {
@@ -24,13 +25,11 @@ public class RootSys : NetSys
     }
     protected override void Start()
     {
-        netManager.Start(7777);
+        netManager.Start(Constants.ServerPort);
     }
     protected override void Tick()
     {
         netManager.PollEvents();
-
-
     }
     protected override void Stop()
     {

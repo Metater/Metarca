@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Metarca.Server.Player;
 
-public class PlayerSys : NetSys
+public class PlayerSys : DepsSys
 {
     public PlayerSys(Deps deps, Sys? parent = null) : base(deps, parent)
     {

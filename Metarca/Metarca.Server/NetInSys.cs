@@ -3,7 +3,7 @@ using Metarca.Server.Ecs;
 
 namespace Metarca.Server;
 
-public class NetInSys : NetSys
+public class NetInSys : DepsSys
 {
     public NetInSys(Deps deps, Sys? parent = null) : base(deps, parent)
     {

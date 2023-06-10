@@ -4,7 +4,7 @@ using Metarca.Shared.Packets;
 
 namespace Metarca.Server;
 
-public class TimeSyncSys : NetSys
+public class TimeSyncSys : DepsSys
 {
     public TimeSyncSys(Deps deps, Sys? parent = null) : base(deps, parent)
     {

@@ -1,5 +1,5 @@
-﻿using Metarca.Shared;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Metarca.Shared;
 
 namespace Metarca.Server;
 
@@ -11,7 +11,7 @@ public static class Time
     public static double Now => stopwatch.Elapsed.TotalSeconds;
     public static double TickTime { get; private set; }
     public static ulong TickId { get; private set; }
-
+    
     public static void Start()
     {
         stopwatch.Start();
