@@ -76,36 +76,46 @@ public abstract class Sys
     #region Management
     protected void AddSub<T>(T sys) where T : Sys
     {
-        children.Add(sys);
         Type type = typeof(T);
+
+        #if DEBUG
+        if (childrenDict.ContainsKey(type))
+        {
+            throw new Exception($"Attempted to add child system \"{type}\" to system \"{GetType()}\" more than once!");
+        }
+        #endif
+
+        children.Add(sys);
         childrenDict.Add(type, sys);
-        Print("initialized");
+        Print($"added subsystem \"{type.Name}\"");
     }
 
     public T Sib<T>() where T : Sys
     {
+        Type type = typeof(T);
+
         #if DEBUG
         if (parent == null)
         {
-            throw new Exception($"Parent system is null in system \"{GetType()}\", so sibling system \"{typeof(T)}\" cannot exist!");
+            throw new Exception($"Parent system is null in system \"{GetType()}\", so sibling system \"{type}\" cannot exist!");
         }
 
-        if (GetType() == typeof(T))
+        if (GetType() == type)
         {
-            throw new Exception($"System \"{GetType()}\" and requested sibling \"{typeof(T)}\" are the same type!");
+            throw new Exception($"System \"{GetType()}\" and requested sibling \"{type}\" are the same type!");
         }
 
         try
         {
-            return (T)parent.childrenDict[typeof(T)];
+            return (T)parent.childrenDict[type];
         }
         catch (KeyNotFoundException)
         {
-            throw new Exception($"Sibling system \"{typeof(T)}\" not found in system \"{GetType()}\"!");
+            throw new Exception($"Sibling system \"{type}\" not found in system \"{GetType()}\"!");
         }
-        #else
-        return (T)Parent!.subsystemsDict[typeof(T)];
-        #endif
+#else
+        return (T)parent!.childrenDict[type];
+#endif
     }
 
     public T Sub<T>() where T : Sys
@@ -120,7 +130,7 @@ public abstract class Sys
             throw new Exception($"Child \"{typeof(T)}\" not found in system \"{GetType()}\"!");
         }
         #else
-        return (T)subsystemsDict[typeof(T)];
+        return (T)childrenDict[typeof(T)];
         #endif
     }
 
@@ -148,11 +158,19 @@ public abstract class Sys
     }
     #endregion
 
-    protected void Print(string message)
+    protected void Print(params string[] lines)
     {
+        StringBuilder sb = new();
+
+        for (int i = 0; i < lines.Length - 1; i++)
+        {
+            sb.AppendLine($"\t{lines[i]}");
+        }
+        sb.Append($"\t{lines[^1]}");
+
         Console.WriteLine(
             $"[{DateTime.Now}] {lineage}\n" +
-            $"\t{message}"
+            $"{sb}"
         );
     }
 }

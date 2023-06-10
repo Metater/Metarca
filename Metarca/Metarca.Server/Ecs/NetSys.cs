@@ -7,6 +7,7 @@ public abstract class NetSys : Sys
 {
     public record Deps(EventBasedNetListener Listener, NetManager NetManager, NetPacketProcessor PacketProcessor, NetOut NetOut);
 
+    protected Deps deps;
     protected readonly EventBasedNetListener listener;
     protected readonly NetManager netManager;
     protected readonly NetPacketProcessor packetProcessor;
@@ -14,6 +15,7 @@ public abstract class NetSys : Sys
 
     public NetSys(Deps deps, Sys? parent = null) : base(parent)
     {
+        this.deps = deps;
         listener = deps.Listener;
         netManager = deps.NetManager;
         packetProcessor = deps.PacketProcessor;
