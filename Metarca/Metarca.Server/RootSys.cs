@@ -4,9 +4,9 @@ using Metarca.Shared;
 
 namespace Metarca.Server;
 
-public class RootSys : DepsSys
+public class RootSys : DepsSys<ServerDeps>
 {
-    public RootSys(Deps deps) : base(deps)
+    public RootSys(ServerDeps deps) : base(deps)
     {
 
     }
@@ -14,15 +14,12 @@ public class RootSys : DepsSys
     protected override void Compose()
     {
         AddSub(new ConnectionSys(deps, this));
-        AddSub(new NetInSys(deps, this));
-        AddSub(new TimeSyncSys(deps, this));
+        AddSub(new NetInSys(this));
+        AddSub(new TimeSyncSys(this));
 
 
     }
-    protected override void Awake()
-    {
 
-    }
     protected override void Start()
     {
         netManager.Start(Constants.ServerPort);

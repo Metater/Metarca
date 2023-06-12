@@ -3,7 +3,7 @@ using LiteNetLib.Utils;
 
 namespace Metarca.Shared.Packets;
 
-public class PeriodicNotifyServerPacket : IPoolable
+public class PeriodicNotifyServerPacket
 {
     public static int SizeOf = 1;
 

@@ -1,6 +1,6 @@
 ﻿namespace Metarca.Server.Ecs.Entities.Player;
 
-public struct InputBufferComp : Comp
+public struct InputBufferComp
 {
     public Entity Entity { get; init; }
 }

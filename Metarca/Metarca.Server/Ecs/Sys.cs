@@ -19,7 +19,6 @@ public abstract class Sys
 
     #region Virtual
     protected virtual void Compose() { }
-    protected virtual void Awake() { }
     protected virtual void Start() { }
     protected virtual void Tick() { }
     protected virtual void Stop() { }
@@ -33,15 +32,6 @@ public abstract class Sys
         foreach (var child in children)
         {
             child.InvokeCompose();
-        }
-    }
-    public void InvokeAwake()
-    {
-        Awake();
-
-        foreach (var child in children)
-        {
-            child.InvokeAwake();
         }
     }
     public void InvokeStart()

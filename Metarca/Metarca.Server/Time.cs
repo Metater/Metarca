@@ -3,21 +3,21 @@ using Metarca.Shared;
 
 namespace Metarca.Server;
 
-public static class Time
+public class Time
 {
-    private static readonly Stopwatch stopwatch = new();
-    private static ulong nextTickId = 0;
+    private readonly Stopwatch stopwatch = new();
+    private ulong nextTickId = 0;
 
-    public static double Now => stopwatch.Elapsed.TotalSeconds;
-    public static double TickTime { get; private set; }
-    public static ulong TickId { get; private set; }
+    public double Now => stopwatch.Elapsed.TotalSeconds;
+    public double TickTime { get; private set; }
+    public ulong TickId { get; private set; }
     
-    public static void Start()
+    public void Start()
     {
         stopwatch.Start();
     }
 
-    public static bool ShouldTick()
+    public bool ShouldTick()
     {
         bool shouldTick = Now * Constants.TicksPerSecond > nextTickId;
 

@@ -1,7 +1,6 @@
 ﻿using LiteNetLib;
 using LiteNetLib.Utils;
 using Metarca.Server;
-using Metarca.Server.Ecs;
 using Metarca.Shared;
 
 // Reminders:
@@ -16,6 +15,8 @@ Console.CancelKeyPress += (s, e) =>
     e.Cancel = true;
 };
 
+Time time = new();
+
 EventBasedNetListener listener = new();
 NetManager netManager = new(listener)
 {
@@ -24,26 +25,25 @@ NetManager netManager = new(listener)
 NetPacketProcessor packetProcessor = new();
 NetOut netOut = new(netManager, packetProcessor);
 
-DepsSys.Deps deps = new(listener, netManager, packetProcessor, netOut);
+ServerDeps deps = new(time, listener, netManager, packetProcessor, netOut);
 
 RootSys root = new(deps);
 
 root.InvokeCompose();
-root.InvokeAwake();
 root.InvokeStart();
 
-Time.Start();
+time.Start();
 
 while (!cts.IsCancellationRequested)
 {
     // Tick until caught up
-    while (Time.ShouldTick())
+    while (time.ShouldTick())
     {
         root.InvokeTick();
 
-        if (Time.TickId % Constants.TicksPerSecond == 0)
+        if (time.TickId % Constants.TicksPerSecond == 0)
         {
-            Console.Title = $"TPS: {Constants.TicksPerSecond} | Uptime: {(ulong)Time.Now}s | Tick Id: {Time.TickId} | Time Per Tick: {(Time.Now - Time.TickTime) * 1000.0:0.000}ms";
+            Console.Title = $"TPS: {Constants.TicksPerSecond} | Uptime: {(ulong)time.Now}s | Tick Id: {time.TickId} | Time Per Tick: {(time.Now - time.TickTime) * 1000.0:0.000}ms";
         }
     }
 

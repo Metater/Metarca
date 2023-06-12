@@ -8,13 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Metarca.Server\Metarca.Server.csproj" />
     <ProjectReference Include="..\Metarca.Shared\Metarca.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="End\" />
-    <Folder Include="Stop\" />
-    <Folder Include="Simulate\" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿namespace Metarca.Shared.Packets;
 
-public class PeriodicNotifyClientPacket : IPoolable
+public class PeriodicNotifyClientPacket
 {
     public static int SizeOf = 8;
 
