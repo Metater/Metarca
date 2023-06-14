@@ -12,8 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="End\" />
-    <Folder Include="Stop\" />
     <Folder Include="Simulate\" />
   </ItemGroup>
 

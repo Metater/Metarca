@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Metarca.Shared.Collections;
 
-public class GenericEvents
+public class Events
 {
     private readonly Dictionary<Type, List<object>> events = new();
 
@@ -32,7 +32,7 @@ public class GenericEvents
         yield break;
     }
 
-    public void Clear()
+    public void ClearAll()
     {
         foreach (var @event in events.Values)
         {

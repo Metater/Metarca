@@ -6,9 +6,9 @@ namespace Metarca.Server;
 
 public class ServerDeps
 {
-    public readonly GenericQueues queues = new();
-    public readonly GenericEvents events = new();
-    public readonly GenericPools pools = new(100);
+    public readonly Queues queues = new();
+    public readonly Events events = new();
+    public readonly Pools pools = new(100);
 
     public readonly Time time;
     public readonly EventBasedNetListener listener;

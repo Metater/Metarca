@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Metarca.Shared.Collections;
 
-public class GenericQueues
+public class Queues
 {
     private readonly Dictionary<Type, Queue<object>> queues = new();
 
@@ -20,7 +20,7 @@ public class GenericQueues
         queue.Enqueue(item);
     }
 
-    public IEnumerable<T> Drain<T>() where T : class
+    public IEnumerable<T> DequeueAll<T>() where T : class
     {
         if (!queues.TryGetValue(typeof(T), out var queue))
         {
@@ -33,7 +33,7 @@ public class GenericQueues
         }
     }
 
-    public IEnumerable<(Type, IEnumerable<object>)> GetPopulated()
+    public IEnumerable<(Type, IEnumerable<object>)> GetNonEmpty()
     {
         return queues
             .Where(kvp => kvp.Value.Count > 0)

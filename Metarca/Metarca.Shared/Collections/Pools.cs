@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Metarca.Shared.Collections;
 
-public class GenericPools
+public class Pools
 {
     private readonly int capacity;
     private readonly Dictionary<Type, Stack<object>> pools = new();
 
-    public GenericPools(int capacity)
+    public Pools(int capacity)
     {
         this.capacity = capacity;
     }
