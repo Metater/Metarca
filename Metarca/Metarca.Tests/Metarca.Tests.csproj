@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Metarca.Server\Metarca.Server.csproj" />
     <ProjectReference Include="..\Metarca.Shared\Metarca.Shared.csproj" />
   </ItemGroup>
 

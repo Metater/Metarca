@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Metarca.Shared.Collections;
-
+namespace Proelium.Shared.Collections;
+    
 public class Queues : IEphemeralQueues, IManualQueues
 {
     private readonly Dictionary<Type, Queue<object>> queues = new();
 
-    public void Enqueue<T>(T item) where T : class
+    public void Enqueue<T>(T item) where T : class, new()
     {
         Type type = typeof(T);
         if (!queues.TryGetValue(type, out var queue))
@@ -20,7 +20,7 @@ public class Queues : IEphemeralQueues, IManualQueues
         queue.Enqueue(item);
     }
 
-    public IEnumerable<T> Get<T>() where T : class
+    public IEnumerable<T> Get<T>() where T : class, new()
     {
         if (!queues.TryGetValue(typeof(T), out var queue))
         {
@@ -45,6 +45,14 @@ public class Queues : IEphemeralQueues, IManualQueues
         foreach (var queue in queues.Values)
         {
             queue.Clear();
+        }
+    }
+
+    public void PoolAll(Pools pools)
+    {
+        foreach (var queue in queues.Values)
+        {
+
         }
     }
 

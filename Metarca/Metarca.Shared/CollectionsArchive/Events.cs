@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Metarca.Shared.Collections;
+namespace Proelium.Shared.Collections;
 
 public class Events : IEphemeralEvents, IManualEvents
 {
     private readonly Dictionary<Type, List<object>> events = new();
 
-    public void Add<T>(T @event) where T : class
+    public void Add<T>(T @event) where T : class, new()
     {
         Type type = typeof(T);
         if (!events.TryGetValue(type, out var list))
@@ -20,7 +20,7 @@ public class Events : IEphemeralEvents, IManualEvents
         list.Add(@event);
     }
 
-    public IEnumerable<T> Get<T>() where T : class
+    public IEnumerable<T> Get<T>() where T : class, new()
     {
         if (!events.TryGetValue(typeof(T), out var list))
         {
@@ -41,7 +41,7 @@ public class Events : IEphemeralEvents, IManualEvents
         }
     }
 
-    public bool Clear<T>() where T : class
+    public bool Clear<T>() where T : class, new()
     {
         if (events.TryGetValue(typeof(T), out var list))
         {

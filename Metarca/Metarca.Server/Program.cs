@@ -25,7 +25,14 @@ NetManager netManager = new(listener)
 NetPacketProcessor packetProcessor = new();
 NetOut netOut = new(netManager, packetProcessor);
 
-ServerDeps deps = new(time, listener, netManager, packetProcessor, netOut);
+ServerDeps deps = new()
+{
+    Time = time,
+    Listener = listener,
+    NetManager = netManager,
+    PacketProcessor = packetProcessor,
+    NetOut = netOut
+};
 
 RootSys root = new(deps);
 

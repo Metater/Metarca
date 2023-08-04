@@ -7,11 +7,11 @@ public class NetListenerSetup : Setup<ServerDeps>
 {
     public NetListenerSetup(ServerDeps t) : base(t)
     {
-        t.listener.ConnectionRequestEvent += Listener_ConnectionRequestEvent;
+        t.Listener.ConnectionRequestEvent += Listener_ConnectionRequestEvent;
     }
 
     private void Listener_ConnectionRequestEvent(ConnectionRequest request)
     {
-        t.events.Add(request);
+        request.Accept();
     }
 }

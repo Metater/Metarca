@@ -19,14 +19,13 @@ public class RootSys : DepsSys<ServerDeps>
 
 
     }
-
     protected override void Start()
     {
-        netManager.Start(Constants.ServerPort);
+        
     }
     protected override void Tick()
     {
-        netManager.PollEvents();
+        
     }
     protected override void Stop()
     {
