@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Metarca.Physics\Metarca.Physics.csproj" />
     <ProjectReference Include="..\Metarca.Shared\Metarca.Shared.csproj" />
   </ItemGroup>
 

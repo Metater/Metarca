@@ -10,5 +10,5 @@ public interface IPartitioner
     public (ushort x, ushort y) GetCoords(Vector2 position);
     public ushort GetCoord(float position);
     public Vector2 GetCenterPosition(uint cellId);
-    public Vector2 GetPosition(uint cellId);*
+    public Vector2 GetPosition(uint cellId);
 }

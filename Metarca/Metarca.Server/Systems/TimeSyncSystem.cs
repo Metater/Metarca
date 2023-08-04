@@ -7,7 +7,7 @@ public class TimeSyncSystem : System
 {
     public TimeSyncSystem(Deps deps) : base(deps)
     {
-
+        
     }
 
     public override void Tick()

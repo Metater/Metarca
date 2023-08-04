@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
 	<LangVersion>11</LangVersion>
-	<BaseOutputPath>E:\Projects\Metarca\Metarca-Unity\Assets\Plugins\Metarca.Shared</BaseOutputPath>
+	<BaseOutputPath></BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

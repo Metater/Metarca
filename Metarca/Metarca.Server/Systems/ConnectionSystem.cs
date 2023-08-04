@@ -14,7 +14,7 @@ public class ConnectionSystem : System
     public event OnPeerConnected? PeerConnectedEvent;
     public delegate void OnPeerDisconnected(NetPeer peer);
     public event OnPeerDisconnected? PeerDisconnectedEvent;
-
+    
     private readonly ConnectionPacket connectionPacket = new();
     private readonly ResettableLatch rejectionLatch = new();
 
